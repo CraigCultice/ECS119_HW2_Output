@@ -1,0 +1,16 @@
+1. Based on the data flow graph and data parallelism, I expect the throughput to increase each time parallelism doubles. This is due to the workload being 
+divided into more partitions and running simultaneouldy so more items can be processed in an amount of time. With P = 1 for example, all tasks are operated 
+sequentially, but wil P = 2, the work is split up into two partitions, doubling the throughput about and almost halving the time. Latency is expected to 
+decrease since workers process data concurrently reducing the run time. Doubling parallelism should theoretically halve latency.
+
+2. The trend is certainly there as parallelism increases, throughput increases and latency decreases. However, this does not occur at the doubling and 
+halving rate I expected. I expected it to be a little different, but the factor of 2 is not consistent throughout any of the graphs. After googling, I 
+suppose this is due to Spark overheads in the framework like task scheduling and resource contention which makes sense. For latency N = 1000000, when doubling 
+the parallelism from P = 1 to 2, it goes from 0.008 to 0.006 which it is expected to be halved.
+
+3. Conjecture: I conjecture that the differences between the theoretical values the model gives and the actual runtimes it gives are due to parallelization 
+overheads like task scheduling and resource contention as I mentioned above. The theoretical model assumes no overheads in parallelization which is why the 
+outcome is quite far off. I think that for P = 1 theres is little overhead as there's no communication between workers, but latency increases linearly with 
+the size of the input. For P = 2 through 4 I think that task scheduling and partitioning overheads are present, but still latency and throughput improves. 
+Lastly with P = 16, the largest parallelization I tested, the overheads seem to nearly cancel out the benefits of more parallilization, speaking to how 
+there is a sweet spot in real world data science when working with parallelization.
